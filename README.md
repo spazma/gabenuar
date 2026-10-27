@@ -1,0 +1,2 @@
+# gabenuar
+Status Serwerów Gabenowych
