@@ -1,0 +1,64 @@
+{
+  "selectedRegion": "PL",
+  "services": [
+    { "id": "status-store", "label": "Steam Store", "subtitle": "Sklep", "status": "normal", "value": "Normal" },
+    { "id": "status-community", "label": "Community", "subtitle": "Społeczność", "status": "normal", "value": "Normal" },
+    { "id": "status-webapi", "label": "Web API", "subtitle": "API & Inwentarze", "status": "normal", "value": "Normal" },
+    { "id": "status-client", "label": "Client Sessions", "subtitle": "Autoryzacja", "status": "normal", "value": "Normal" }
+  ],
+  "players": {
+    "online": "24.150.320",
+    "ingame": "7.840.100"
+  },
+  "alerts": [
+    { "title": "⚠️ Opóźnienie Web API", "text": "Steam Web API odpowiada wolniej (>800ms)." },
+    { "title": "🔴 Awaria Węzła Regionalnego", "text": "Zgłoszono przeciążenie i wysokie pakiety dropów na wybranym serwerze." },
+    { "title": "⚡ Skok obciążenia skrytki", "text": "Odnotowano wydłużony czas autoryzacji transakcji rynkowych." }
+  ],
+  "pageviews": [450, 520, 610, 580, 700, 890],
+  "pageviewsPeak": [200, 350, 600, 950, 1400, 1250],
+  "regions": [
+    {
+      "id": "group-europe",
+      "title": "Europa (Europe / Selected Region)",
+      "items": [
+        { "code": "AMS", "name": "Amsterdam", "status": "OK", "value": "OK", "badge": "normal" },
+        { "code": "FSN", "name": "Falkenstein", "status": "N/A", "value": "N/A", "badge": "warn" },
+        { "code": "FRA", "name": "Frankfurt", "status": "OK", "value": "OK", "badge": "normal" },
+        { "code": "LHR", "name": "London", "status": "OK", "value": "OK", "badge": "normal" }
+      ]
+    },
+    {
+      "id": "group-americas",
+      "title": "Americas",
+      "items": [
+        { "code": "ATL", "name": "Atlanta", "status": "OK", "value": "Low load", "badge": "normal" },
+        { "code": "ORD", "name": "Chicago", "status": "OK", "value": "Low load", "badge": "normal" },
+        { "code": "LIM", "name": "Lima", "status": "HIGH", "value": "High load", "badge": "warn" }
+      ]
+    },
+    {
+      "id": "group-asia",
+      "title": "Asia",
+      "items": [
+        { "code": "TYO", "name": "Tokyo", "status": "OK", "value": "OK", "badge": "normal" },
+        { "code": "PEK", "name": "Beijing", "status": "N/A", "value": "N/A", "badge": "warn" }
+      ]
+    }
+  ],
+  "regionDetails": {
+    "PL": [
+      { "code": "WAW", "name": "Warszawa", "status": "OK", "value": "OK (15 Gbps)", "badge": "normal" },
+      { "code": "KTW", "name": "Katowice", "status": "OK", "value": "OK (10 Gbps)", "badge": "normal" },
+      { "code": "POZ", "name": "Poznań", "status": "OK", "value": "Low Latency", "badge": "normal" }
+    ],
+    "DE": [
+      { "code": "BER", "name": "Berlin", "status": "OK", "value": "OK", "badge": "normal" },
+      { "code": "MUC", "name": "Monachium", "status": "OK", "value": "OK", "badge": "normal" }
+    ],
+    "US": [
+      { "code": "NYC", "name": "New York", "status": "OK", "value": "OK", "badge": "normal" },
+      { "code": "LAX", "name": "Los Angeles", "status": "OK", "value": "OK", "badge": "normal" }
+    ]
+  }
+}

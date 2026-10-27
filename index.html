@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GABENUAR — by spazma</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-block">
+        <h1>
+          GABENUAR
+          <span class="badge-pl">PUMP Edition</span>
+        </h1>
+        <p class="subtitle" data-i18n="subtitle">Globalny monitor serwerów Gabenowych</p>
+      </div>
+
+      <div class="topbar-right">
+        <div class="refresh-timer-badge" id="timer-badge">🔄 Odświeżenie za: 5s</div>
+        <div id="last-update" class="last-update" data-i18n="syncLabel">Sync: --:--:--</div>
+        <button class="lang-toggle" id="language-toggle" aria-label="Toggle language">PL / EN</button>
+        <button class="btn" id="open-admin-btn" data-i18n="adminBtn">⚙️ Tryb Admin</button>
+      </div>
+    </header>
+
+    <div id="sim-status-bar" class="sim-status-bar hidden">
+      <span id="sim-status-text">⚠️ Symulacja aktywna:</span>
+      <span id="sim-status-detail"></span>
+    </div>
+
+    <div id="traffic-warning" class="traffic-warning hidden">
+      <span><strong data-i18n="trafficWarningTitle">Wysokie natężenie ruchu (SteamStat.us):</strong> <span data-i18n="trafficWarningText">Wykryto napływ użytkowników na stronę – wysokie ryzyko opóźnień!</span></span>
+      <button id="dismiss-btn" data-i18n="dismissBtn">Rozumiem</button>
+    </div>
+
+    <main class="dashboard-layout">
+      <section class="main-column">
+        <div class="panel">
+          <div class="panel-title">
+            <span data-i18n="mainServices">Główne Usługi Steam</span>
+          </div>
+          <div id="services-grid" class="status-grid"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <span data-i18n="regionManagers">Region / Connection Managers (CM)</span>
+            <div class="panel-actions">
+              <label class="checkbox-inline">
+                <input type="checkbox" id="filter-outages-only" />
+                <span data-i18n="onlyOutages">Tylko awarie</span>
+              </label>
+              <button class="btn btn-small" id="toggle-all-regions" data-i18n="toggleRegions">Zwiń wszystko</button>
+            </div>
+          </div>
+
+          <div id="regions-container"></div>
+        </div>
+      </section>
+
+      <aside class="side-column">
+        <div class="panel">
+          <div class="panel-title">
+            <span data-i18n="steamActivity">Aktywność Steam</span>
+          </div>
+          <div class="stats-box">
+            <span data-i18n="playersOnline">Gracze Online:</span>
+            <span id="players-online">24.150.320</span>
+          </div>
+          <div class="stats-box">
+            <span data-i18n="inGamePlayers">W Grach (In-Game):</span>
+            <span id="players-ingame">7.840.100</span>
+          </div>
+        </div>
+
+        <div class="panel panel-alerts">
+          <div class="panel-title">
+            <span data-i18n="criticalState">Stan Krytyczny (Rotacja)</span>
+          </div>
+          <div id="rotating-box" class="rotating-alert" title="Kliknij, aby zobaczyć wszystkie błędy">
+            <div class="rot-title" id="rot-header">
+              <span>⚠️ Ostrzeżenie</span>
+              <span class="link-like" data-i18n="allAlerts">[Wszystkie 🔍]</span>
+            </div>
+            <div class="rot-text" id="rot-content">Ładowanie...</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <span id="chart-title" data-i18n="chartTitle">SteamStat.us Page Views</span>
+            <select id="chart-mode-select" class="chart-mode-select" aria-label="Chart mode">
+              <option value="players" data-i18n="chartModePlayers">Gracze</option>
+              <option value="pageviews" data-i18n="chartModePageviews">Page Views</option>
+            </select>
+          </div>
+          <div id="chart-caption" class="chart-caption" data-i18n="chartCaptionPlayers">% względne graczy w ostatnich 12 godzinach</div>
+          <div class="chart-container">
+            <canvas id="viewsChart"></canvas>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        by spazma 2026 |||
+        <a href="https://spazma.github.io" target="_blank" rel="noreferrer">spazma.github.io</a>
+      </div>
+      <div id="visits-counter" data-i18n="visitsCounter">visits: ładowanie...</div>
+    </footer>
+
+    <div id="admin-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-i18n="adminTitle">🛠️ Panel Administratora (Tryb Admin)</h3>
+          <button class="close-modal" id="close-admin-btn" aria-label="Zamknij">&times;</button>
+        </div>
+
+        <div class="admin-form-group">
+          <label for="select-region" data-i18n="selectRegionLabel">Wymuś region szczegółowy:</label>
+          <select id="select-region">
+            <option value="PL">Polska (Warszawa, Katowice, Poznań)</option>
+            <option value="DE">Niemcy (Berlin, Monachium)</option>
+            <option value="US">USA (New York, Los Angeles)</option>
+          </select>
+        </div>
+
+        <div class="admin-actions">
+          <button class="btn" id="admin-traffic-btn" data-i18n="trafficSimBtn">⚡ Symuluj Gęsty Ruch (Pik)</button>
+          <button class="btn btn-danger" id="admin-outage-btn" data-i18n="outageSimBtn">💥 Symuluj Awarię</button>
+          <button class="btn" id="admin-reset-btn" data-i18n="resetBtn">🗑️ Reset LocalStorage</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="incidents-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-i18n="incidentTitle">📋 Wszystkie aktywne incydenty i błędy</h3>
+          <button class="close-modal" id="close-incidents-btn" aria-label="Zamknij">&times;</button>
+        </div>
+        <div class="incident-list" id="modal-incident-container"></div>
+      </div>
+    </div>
+
+    <script>
+      fetch("https://multi-counter.score-3e6.workers.dev/hit/gabenuar")
+        .then((r) => r.json())
+        .then((data) => {
+          const counter = document.getElementById("visits-counter");
+          if (data.cooldown) {
+            counter.innerText = "visits: " + data.lastCount;
+            return;
+          }
+          counter.innerText = "visits: " + data.count;
+        })
+        .catch(() => {
+          document.getElementById("visits-counter").innerText = "visits: niedostępne";
+        });
+    </script>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
